@@ -1,0 +1,16 @@
+# No header row, a semicolon delimiter, two comment lines to skip, positional
+# columns, quoted fields containing the delimiter, embedded newlines and
+# escaped quotes, and empty cells in the final columns.
+name: log
+description: Instrument log exported with a non-default dialect.
+
+input:
+  format: csv
+  header: false
+  delimiter: ";"
+  skip_lines: 2
+  fields:
+    - {column: 0, name: stamp,   type: f64}
+    - {column: 1, name: station}
+    - {column: 2, name: note}
+    - {column: 3, name: reading, type: f32}

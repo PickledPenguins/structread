@@ -1,0 +1,12 @@
+# Whole columns as arrays: 'signal' is one column, 'xyz' is three columns read
+# together as a 2-D array. No field varies with the index, so the file yields
+# one result no matter how many data rows it has.
+name: sensors_trace
+description: Whole-column traces from a sensor log.
+
+input:
+  format: csv
+  fields:
+    - {column: serial_no,  name: serial, row: 0}
+    - {column: signal,     type: f64, shape: [$nrows]}
+    - {columns: [x, y, z], name: xyz, type: f32}

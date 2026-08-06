@@ -1,0 +1,12 @@
+# Root attributes only. No field declares a name, so each one is named after
+# the attribute it reads.
+name: instrument
+description: Session-level metadata held in the file's root attributes.
+
+input:
+  format: hdf5
+  fields:
+    - {at: "/@run_id",     type: u32}
+    - {at: "/@instrument", type: str}
+    - {at: "/@gain",       type: f64}
+    - {at: "/@operator"}

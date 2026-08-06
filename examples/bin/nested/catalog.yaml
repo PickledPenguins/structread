@@ -1,0 +1,42 @@
+# A record containing an array of nested structures, reached through an absolute
+# offset carried in the header.
+#
+# The header ends with a seek to the offset it declares, so the reserved space
+# between the header and the first entry never has to be counted by hand. Each
+# entry is a fixed 48 bytes regardless of how many points it holds, which lets
+# any entry be reached directly rather than by walking the ones before it.
+name: catalog
+version: 2
+source: "example: repeating nested structures, absolute offsets, magic and enum"
+description: Catalogue file holding a variable-length point list per entry.
+
+input:
+  format: bin
+  endian: little
+
+  header:
+    - {name: magic,       type: u32, expect: 0x43415431}   # rejects the wrong file
+    - {name: version,     type: u16}
+    - {name: kind,        type: u8, enum: {1: image, 2: spectrum}}
+    - {pad: 1}
+    - {name: entry_count, type: u16}
+    - {pad: 2}
+    - {name: data_offset, type: u32}
+    - {name: description, type: char, shape: [24]}
+    - {seek: $data_offset}          # jump to where the header says the data starts
+
+  record_count: $header.entry_count
+  record_size: 48                   # each entry occupies 48 bytes, slack included
+  record:
+    - {name: id,      type: u32}
+    - {name: label,   type: char, shape: [12]}
+    - {name: npoints, type: u16}
+    - {pad: 2}
+    - name: points                  # an array of nested structures
+      count: $npoints
+      fields:
+        - name: position            # a structure inside each element
+          fields:
+            - {name: x, type: f32}
+            - {name: y, type: f32}
+        - {name: weight, type: f32}

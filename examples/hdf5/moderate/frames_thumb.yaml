@@ -1,0 +1,17 @@
+# The same frames, decimated on the way out. The slice is applied to the dataset
+# rather than to the result, so a large frame is never read in full just to be
+# thrown away.
+name: frames_thumb
+description: Every other pixel of each frame, as raw bytes.
+
+aliases:
+  n: index
+
+input:
+  format: hdf5
+  fields:
+    - {at: "/data/frame{n}/data", name: thumb, type: u16, slice: "[::2, ::2]"}
+
+output:
+  format: npy
+  fields: [thumb]

@@ -1,0 +1,31 @@
+# Reads the binary capture from examples/bin/moderate. Paired with modern.yaml,
+# which reads a completely different HDF5 layout; both emit the same columns so
+# one run can merge them into a single table.
+name: legacy
+description: Frame metadata from the binary capture format.
+
+input:
+  format: bin
+  endian: little
+  header:
+    - {name: magic,   type: u32}
+    - {name: version, type: u16}
+    - {name: nframes, type: u16}
+    - {name: label,   type: char, shape: [16]}
+  record_count: $header.nframes
+  record:
+    - {name: frame_id,  type: u64}
+    - {name: width,     type: u16}
+    - {name: height,    type: u16}
+    - {pad: 2}
+    - {name: timestamp, type: f64}
+    - {name: data,      type: u16, shape: [$height, $width]}
+
+output:
+  format: csv
+  fields:
+    - schema
+    - stem
+    - index
+    - {field: record.frame_id,  as: frame_id}
+    - {field: record.timestamp, as: timestamp}

@@ -1,0 +1,26 @@
+# The same file as capture_meta.yaml, but emitting one frame's pixels as raw
+# bytes. Pipe it into another program, or use -o "frame_{index}.bin".
+name: capture_frame
+version: 1
+description: Frame pixel data from a capture file, as raw bytes.
+
+input:
+  format: bin
+  endian: little
+  header:
+    - {name: magic,   type: u32}
+    - {name: version, type: u16}
+    - {name: nframes, type: u16}
+    - {name: label,   type: char, shape: [16]}
+  record_count: $header.nframes
+  record:
+    - {name: frame_id,  type: u64}
+    - {name: width,     type: u16}
+    - {name: height,    type: u16}
+    - {pad: 2}
+    - {name: timestamp, type: f64}
+    - {name: data,      type: u16, shape: [$height, $width]}
+
+output:
+  format: bin
+  fields: [record.data]

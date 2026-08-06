@@ -1,0 +1,23 @@
+# Reads the HDF5 capture from examples/hdf5/moderate. The output block matches
+# legacy.yaml exactly, even though the fields come from entirely different
+# places, so the two can be combined in one command.
+name: modern
+description: Frame metadata from the HDF5 capture format.
+
+aliases:
+  n: index
+
+input:
+  format: hdf5
+  fields:
+    - {at: "/data/frame{n}@timestamp",   name: stamp, type: f64}
+    - {at: "/data/frame{n}@exposure_us", name: exposure, type: u32}
+
+output:
+  format: csv
+  fields:
+    - schema
+    - stem
+    - index
+    - {field: exposure, as: frame_id}
+    - {field: stamp,    as: timestamp}

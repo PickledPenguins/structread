@@ -1,0 +1,51 @@
+# Big-endian file with nested header structures and variable-length records.
+# Records carry their own dimensions, so each one is a different size and the
+# file is walked to its end rather than using a declared count.
+#
+# Scope: inside 'record', $rows and $cols are siblings and resolve by short
+# name. 'header.geometry.planes' is outside that scope, so it needs a full
+# path - the alias below provides a short spelling of it.
+#
+# The last record has rows = 0, so its cube is empty. A zero-length dimension
+# is read normally and reported with a shape rather than being an error.
+name: scan
+version: 2
+source: "example: nested structures, scope traversal, variable-length records"
+description: Multi-plane scan file.
+
+aliases:
+  planes: header.geometry.planes
+
+input:
+  format: bin
+  endian: big
+  header:
+    - {name: magic, type: u32}
+    - name: geometry
+      fields:
+        - {name: width,  type: u16}
+        - {name: height, type: u16}
+        - {name: planes, type: u8}
+        - {pad: 1}
+        - name: origin                 # a third level of nesting
+          fields:
+            - {name: x, type: i16}
+            - {name: y, type: i16}
+    - name: flags
+      fields:
+        - {name: calibrated, type: bool}
+        - {name: inverted,   type: bool}
+    - name: limits
+      fields:
+        - {name: smallest, type: i8}
+        - {name: small,    type: i16}
+        - {name: medium,   type: i32}
+        - {name: large,    type: i64}
+  record:
+    - {name: id,   type: u32}
+    - {name: rows, type: u16}
+    - {name: cols, type: u16}
+    - {name: gain, type: f64}
+    - {name: cube,  type: u8, shape: [$rows, $cols, $planes]}
+    - {name: edges, type: u8, shape: [$rows + $cols]}   # arithmetic
+    - {name: pair,  type: u8, shape: [2, $cols]}        # literal and expression

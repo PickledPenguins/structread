@@ -1,0 +1,7 @@
+# instrument log, exported 2026-05-01
+# columns: stamp;station;note;reading
+1001.0;alpha;"routine; nothing to report";21.5
+1002.0;beta;"multi-line
+observation";21.6
+1003.0;gamma;;
+1004.0;delta;"quoted ""double"" quotes";22.1

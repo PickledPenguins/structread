@@ -1,0 +1,16 @@
+# Header-only binary file: a fixed set of scalars and one fixed-length string.
+# No 'record' block, so each file yields exactly one result.
+name: device
+version: 1
+description: Device descriptor written once at the start of a session.
+
+input:
+  format: bin
+  endian: little
+  header:
+    - {name: magic,       type: u32}
+    - {name: serial,      type: char, shape: [8]}
+    - {name: firmware,    type: u16}
+    - {name: active,      type: bool}
+    - {pad: 1}
+    - {name: temperature, type: f32}

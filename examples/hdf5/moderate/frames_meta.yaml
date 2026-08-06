@@ -1,0 +1,19 @@
+# Per-frame attributes across every /data/frameN group. The frames are visited
+# in natural numeric order, so frame2 comes before frame10.
+name: frames_meta
+description: Frame metadata from an HDF5 capture, as a table.
+
+aliases:
+  n: index
+
+input:
+  format: hdf5
+  fields:
+    - {at: "/@run_id",                   type: u32}
+    - {at: "/@instrument",               type: str}
+    - {at: "/data/frame{n}@timestamp",   name: stamp,    type: f64}
+    - {at: "/data/frame{n}@exposure_us", name: exposure, type: u32}
+
+output:
+  format: csv
+  fields: [stem, index, run_id, instrument, stamp, exposure]

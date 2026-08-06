@@ -1,0 +1,33 @@
+# Header plus a counted series of fixed-size frame records.
+# Only the scalars are listed in the output, so the pixel data is never read.
+name: capture_meta
+version: 1
+description: Per-frame metadata from a capture file, as a table.
+
+input:
+  format: bin
+  endian: little
+  header:
+    - {name: magic,   type: u32}
+    - {name: version, type: u16}
+    - {name: nframes, type: u16}
+    - {name: label,   type: char, shape: [16]}
+  record_count: $header.nframes
+  record:
+    - {name: frame_id,  type: u64}
+    - {name: width,     type: u16}
+    - {name: height,    type: u16}
+    - {pad: 2}
+    - {name: timestamp, type: f64}
+    - {name: data,      type: u16, shape: [$height, $width]}
+
+output:
+  format: csv
+  fields:
+    - stem
+    - index
+    - {field: header.label,     as: label}
+    - {field: record.frame_id,  as: frame_id}
+    - {field: record.width,     as: width}
+    - {field: record.height,    as: height}
+    - {field: record.timestamp, as: timestamp}

@@ -1,0 +1,16 @@
+# One output row per data row. 'serial' is pinned to the first data row, so it
+# repeats unchanged instead of varying with the index. The fourth row has an
+# empty 'ambient' cell, which becomes an empty CSV cell or a JSON null.
+name: sensors_rows
+description: Per-row sensor values.
+
+input:
+  format: csv
+  fields:
+    - {column: serial_no, name: serial, row: 0}
+    - {column: timestamp, name: stamp,  type: f64}
+    - {column: ambient,   type: f32}
+
+output:
+  format: csv
+  fields: [stem, index, serial, stamp, ambient]

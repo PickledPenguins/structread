@@ -1,0 +1,20 @@
+# The index appears inside a name segment rather than as a whole segment, the
+# image shape is taken from sibling attributes on the dataset itself, and a
+# scalar dataset is declared with an empty shape so it reads as a single value.
+name: hdf5_scan
+version: 1
+description: Indexed scan images with metadata from a parallel group.
+
+aliases:
+  n: index
+
+input:
+  format: hdf5
+  fields:
+    - {at: "/@experiment", type: str}
+    - {at: "/calibration", type: f64, shape: []}
+    - {at: "/scan/img_{n}_raw@rows",         name: rows,     type: u16}
+    - {at: "/scan/img_{n}_raw@cols",         name: cols,     type: u16}
+    - {at: "/scan/img_{n}_meta@filter",      name: filter,   type: str}
+    - {at: "/scan/img_{n}_meta@exposure_us", name: exposure, type: u32}
+    - {at: "/scan/img_{n}_raw",              name: image,    type: f32, shape: [$rows, $cols]}

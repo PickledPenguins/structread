@@ -1,0 +1,12 @@
+# Names come from the column headers and no types are declared, so every value
+# is read as text. The startup summary lists both assumptions.
+name: readings
+description: Sensor readings, read as text.
+
+input:
+  format: csv
+  fields:
+    - {column: timestamp}
+    - {column: serial_no, name: serial}
+    - {column: ambient}
+    - {column: signal}

@@ -1,0 +1,20 @@
+# Reads the CSV sensor log from examples/csv/moderate. Paired with legacy.yaml
+# and modern.yaml, which read a binary and an HDF5 layout; all three emit the
+# same columns, so one command merges all three formats into a single table.
+name: tabular
+description: Frame metadata from the CSV export format.
+
+input:
+  format: csv
+  fields:
+    - {column: timestamp, name: stamp,  type: f64}
+    - {column: signal,    name: signal, type: f64}
+
+output:
+  format: csv
+  fields:
+    - schema
+    - stem
+    - index
+    - {field: signal, as: frame_id}
+    - {field: stamp,  as: timestamp}
